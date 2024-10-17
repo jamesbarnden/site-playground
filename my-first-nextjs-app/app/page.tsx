@@ -22,6 +22,7 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
           <li>New line entry that I just created.</li>
+          <li>Another line entry that I added to the page.</li>
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
