@@ -6,13 +6,14 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        primary: '#003049',
-        secondary: '#780000',
-        background: '#fdf0d5',
-        text: '#003049',
+        primary: '#3498db',
+        secondary: '#2ecc71',
+        background: '#ecf0f1',
+        text: '#2c3e50',
       },
       fontFamily: {
         sans: ['Roboto', 'Arial', 'sans-serif'],
