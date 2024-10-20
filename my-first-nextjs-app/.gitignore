@@ -34,3 +34,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore image files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+
+# Ignore specific image directories
+/public/photographs/
+/app/components/photographs/
