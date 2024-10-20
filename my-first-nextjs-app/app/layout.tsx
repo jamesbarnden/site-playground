@@ -1,5 +1,7 @@
 import './globals.css'
 import { Roboto } from 'next/font/google'
+import Navbar from './components/Navbar'
+import { ThemeProvider } from 'next-themes'
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -19,7 +21,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} bg-background text-text`}>{children}</body>
+      <body className={`${roboto.className} bg-background dark:bg-gray-900 text-text dark:text-white`}>
+        <ThemeProvider attribute="class">
+          <Navbar />
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
