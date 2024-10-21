@@ -23,6 +23,10 @@ const config: Config = {
         heading: {
           light: '#1C1917', 
           dark: '#E2E8F0',
+        },
+        outline: {
+          light: '#e2e8f0',
+          dark: '#4a5568',
         }
       },
       fontFamily: {
