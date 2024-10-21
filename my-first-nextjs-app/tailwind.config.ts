@@ -10,10 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#3498db',
+        primary: '#00151f',
         secondary: '#2ecc71',
-        background: '#ecf0f1',
-        text: '#2c3e50',
+        background: {
+          light: 'gray-600',
+          dark: 'gray-600',
+        },
+        text: {
+          light: 'gray-600',
+          dark: 'gray-600',
+        },
       },
       fontFamily: {
         sans: ['Roboto', 'Arial', 'sans-serif'],

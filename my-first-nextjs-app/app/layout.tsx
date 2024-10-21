@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} bg-background dark:bg-gray-900 text-text dark:text-white`}>
+      <body className={`${roboto.className} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}>
         <ThemeProvider attribute="class">
           <Navbar />
           {children}
