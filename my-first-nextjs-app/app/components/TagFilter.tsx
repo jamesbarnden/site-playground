@@ -23,12 +23,12 @@ export default function TagFilter({
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
-    <div className="mb-8 bg-background-light dark:bg-background-dark p-4 rounded-lg shadow-md">
+    <div className="mb-8">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-heading-light dark:text-heading-dark">Filters</h2>
+        <h2 className="text-xl font-bold">Filters</h2>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-text-light hover:text-secondary dark:text-text-dark dark:hover:text-secondary"
+          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
         >
           {isCollapsed ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
         </button>
@@ -40,10 +40,10 @@ export default function TagFilter({
               <button
                 key={tag}
                 onClick={() => onTagToggle(tag)}
-                className={`px-3 py-1 rounded-full text-sm ${
+                className={`px-3 py-1 rounded-full text-sm border ${
                   selectedTags.includes(tag)
-                    ? 'bg-primary text-text-dark'
-                    : 'bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark'
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-transparent text-gray-800 dark:text-gray-200 border-outline-light dark:border-outline-dark'
                 }`}
               >
                 {tag}
@@ -53,14 +53,15 @@ export default function TagFilter({
           {selectedTags.length > 0 && (
             <button
               onClick={onClearFilters}
-              className="text-sm text-primary hover:text-secondary dark:text-primary dark:hover:text-secondary flex items-center"
+              className="text-sm text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 flex items-center"
             >
-              <X size={16} className="mr-1" /> Clear all filters
+              <X size={16} className="mr-1" />
+              Clear filters
             </button>
           )}
         </>
       )}
-      <p className="text-sm text-text-light dark:text-text-dark mt-2">
+      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
         Showing {filteredImagesCount} of {totalImages} images
       </p>
     </div>

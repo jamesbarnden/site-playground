@@ -43,24 +43,28 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-background-light dark:bg-background-dark">
-      <Heading>My Image Gallery</Heading>
-      <TagFilter
-        tags={allTags}
-        selectedTags={selectedTags}
-        onTagToggle={handleTagToggle}
-        onClearFilters={clearFilters}
-        totalImages={images.length}
-        filteredImagesCount={filteredImages.length}
-      />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredImages.map((img, index) => (
-          <ExpandableImage 
-            key={index}
-            src={img.src} 
-            alt={img.alt}
+    <main className="min-h-screen bg-background-light dark:bg-background-dark px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <Heading className="text-center py-8">My Image Gallery</Heading>
+        <div className="mb-8">
+          <TagFilter
+            tags={allTags}
+            selectedTags={selectedTags}
+            onTagToggle={handleTagToggle}
+            onClearFilters={clearFilters}
+            totalImages={images.length}
+            filteredImagesCount={filteredImages.length}
           />
-        ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+          {filteredImages.map((img, index) => (
+            <ExpandableImage 
+              key={index}
+              src={img.src} 
+              alt={img.alt}
+            />
+          ))}
+        </div>
       </div>
     </main>
   )
