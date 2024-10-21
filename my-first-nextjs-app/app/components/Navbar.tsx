@@ -3,7 +3,7 @@ import DarkModeToggle from './DarkModeToggle'
 
 export default function Navbar() {
   return (
-    <nav className="bg-primary dark:bg-background-dark text-text-light dark:text-text-dark p-4">
+    <nav className="bg-primary dark:bg-primary text-text-light dark:text-text-light p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">My Gallery</Link>
         <div className="flex items-center space-x-4">
