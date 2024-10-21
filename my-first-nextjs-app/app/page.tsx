@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import ExpandableImage from './components/ExpandableImage'
 import Heading from './components/Heading'
 import TagFilter from './components/TagFilter'
@@ -22,6 +22,7 @@ const allTags = Array.from(new Set(images.flatMap(img => img.tags)))
 
 export default function Home() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [expandedImageIndex, setExpandedImageIndex] = useState<number | null>(null)
 
   const filteredImages = useMemo(() => {
     if (selectedTags.length === 0) return images
@@ -40,6 +41,21 @@ export default function Home() {
 
   const clearFilters = () => {
     setSelectedTags([])
+  }
+
+  const handleNavigate = useCallback((currentIndex: number, direction: 'prev' | 'next') => {
+    const newIndex = direction === 'prev' 
+      ? (currentIndex - 1 + filteredImages.length) % filteredImages.length
+      : (currentIndex + 1) % filteredImages.length
+    setExpandedImageIndex(newIndex)
+  }, [filteredImages])
+
+  const handleExpand = (index: number) => {
+    setExpandedImageIndex(index)
+  }
+
+  const handleClose = () => {
+    setExpandedImageIndex(null)
   }
 
   return (
@@ -62,6 +78,12 @@ export default function Home() {
               key={index}
               src={img.src} 
               alt={img.alt}
+              index={index}
+              totalImages={filteredImages.length}
+              onNavigate={(direction) => handleNavigate(index, direction)}
+              isExpanded={expandedImageIndex === index}
+              onExpand={() => handleExpand(index)}
+              onClose={handleClose}
             />
           ))}
         </div>

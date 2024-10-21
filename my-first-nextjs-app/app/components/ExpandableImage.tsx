@@ -1,19 +1,51 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useCallback } from 'react'
 import Image from 'next/image'
 
 interface ExpandableImageProps {
   src: string
   alt: string
+  index: number
+  totalImages: number
+  onNavigate: (direction: 'prev' | 'next') => void
+  isExpanded: boolean
+  onExpand: () => void
+  onClose: () => void
 }
 
-export default function ExpandableImage({ src, alt }: ExpandableImageProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+export default function ExpandableImage({ 
+  src, 
+  alt, 
+  index, 
+  totalImages, 
+  onNavigate, 
+  isExpanded, 
+  onExpand, 
+  onClose 
+}: ExpandableImageProps) {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (isExpanded) {
+      if (e.key === 'ArrowLeft') {
+        onNavigate('prev')
+      } else if (e.key === 'ArrowRight') {
+        onNavigate('next')
+      } else if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+  }, [isExpanded, onNavigate, onClose])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleKeyDown])
 
   return (
     <>
-      <div className="relative w-[400px] h-[400px] cursor-pointer" onClick={() => setIsExpanded(true)}>
+      <div className="relative w-[400px] h-[400px] cursor-pointer" onClick={onExpand}>
         <Image
           src={src}
           alt={alt}
@@ -24,7 +56,7 @@ export default function ExpandableImage({ src, alt }: ExpandableImageProps) {
       {isExpanded && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setIsExpanded(false)}
+          onClick={onClose}
         >
           <div className="relative w-[90vw] h-[90vh]">
             <Image
@@ -37,11 +69,14 @@ export default function ExpandableImage({ src, alt }: ExpandableImageProps) {
               className="absolute top-4 right-4 text-white text-2xl"
               onClick={(e) => {
                 e.stopPropagation()
-                setIsExpanded(false)
+                onClose()
               }}
             >
               ×
             </button>
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white">
+              {index + 1} / {totalImages}
+            </div>
           </div>
         </div>
       )}
