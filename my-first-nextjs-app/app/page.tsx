@@ -6,16 +6,33 @@ import Heading from './components/Heading'
 import TagFilter from './components/TagFilter'
 
 const images = [
-  { src: "/photographs/BUS-03.jpg", alt: "Bus", tags: ["transport", "urban"] },
-  { src: "/photographs/ASAKUSA-BURGER-01.jpg", alt: "Burger", tags: ["food", "urban"] },
-  { src: "/photographs/HOPPY-03.jpg", alt: "Hoppy", tags: ["drink", "urban"] },
-  { src: "/photographs/JEA-A-03.jpg", alt: "Jea", tags: ["portrait", "urban"] },
-  { src: "/photographs/OKAMOTO-02.jpg", alt: "Okamoto", tags: ["portrait", "rural"] },
-  { src: "/photographs/TANABATA-01.jpg", alt: "Tanabata", tags: ["festival", "urban"] },
-  { src: "/photographs/ITO-B-01.jpg", alt: "Ito", tags: ["portrait", "rural"] },
-  { src: "/photographs/ITO-FISHER-03.jpg", alt: "Fishmun", tags: ["portrait", "rural", "occupation"] },
-  { src: "/photographs/ONII-JEA-02.jpg", alt: "OniiJea", tags: ["portrait", "urban"] },
-  { src: "/photographs/ITO-KAKI-02.jpg", alt: "Kaki", tags: ["food", "rural"] },
+  { src: "/photographs/BUS-03.jpg", alt: "Bus", tags: ["night", "urban"] },
+  { src: "/photographs/ASAKUSA-BURGER-01.jpg", alt: "Burger", tags: ["restaurant", "urban", "night"] },
+  { src: "/photographs/HOPPY-03.jpg", alt: "Hoppy", tags: ["people", "urban", "night"] },
+  { src: "/photographs/JEA-A-03.jpg", alt: "Jea", tags: ["portrait", "urban", "people", "night"] },
+  { src: "/photographs/OKAMOTO-02.jpg", alt: "Okamoto", tags: ["restaurant", "urban", "night"] },
+  { src: "/photographs/TANABATA-01.jpg", alt: "Tanabata", tags: ["festival", "urban", "night"] },
+  { src: "/photographs/ITO-B-01.jpg", alt: "Ito", tags: ["rural"] },
+  { src: "/photographs/ITO-FISHER-03.jpg", alt: "Fishmun", tags: ["people", "rural"] },
+  { src: "/photographs/ONII-JEA-02.jpg", alt: "OniiJea", tags: ["portrait", "people"] },
+  { src: "/photographs/ITO-KAKI-02.jpg", alt: "Kaki", tags: ["restaurant"] },
+  { src: '/photographs/BROKKU-01.jpg', alt: 'BROKKU-01', tags: ["abstract", "architecture"] },
+  { src: '/photographs/BUTTER-01-SQ.jpg', alt: 'BUTTER-01-SQ', tags: ["people", "urban"] },
+  { src: '/photographs/FROGGY-03.jpg', alt: 'FROGGY-03', tags: [] },
+  { src: '/photographs/MIYATA-01.jpg', alt: 'MIYATA-01', tags: ["urban", "architecture"] },
+  { src: '/photographs/OJII-02.jpg', alt: 'OJII-02', tags: ["portrait", "restaurant"] },
+  { src: '/photographs/REF-LEATHER-04.jpg', alt: 'REF-LEATHER-04', tags: ["urban", "architecture"] },
+  { src: '/photographs/SKY-TRAIN-01.jpg', alt: 'SKY-TRAIN-01', tags: ["urban", "night"] },
+  { src: '/photographs/STATION-01.jpg', alt: 'STATION-01', tags: ["people", "urban", "night"] },
+  { src: '/photographs/TAIYAKI-01-Big-Grain.jpg', alt: 'TAIYAKI-01-Big-Grain', tags: ["restaurant", "urban", "people"] },
+  { src: '/photographs/TRUCK-01.jpg', alt: 'TRUCK-01', tags: ["urban", "vehicles", "architecture"] },
+  { src: '/photographs/CAT-01.jpg', alt: 'CAT-01', tags: ["urban"] },
+  { src: '/photographs/DUDE-01.jpg', alt: 'DUDE-01', tags: ["urban", "people", "portrait"] },
+  {"src":"/photographs/STAIRS-A-01.jpg","alt":"STAIRS-A-01","tags":["architecture", "urban", "stairs", "night"]}, 
+  {"src":"/photographs/STAIRS-B-01.jpg","alt":"STAIRS-B-01","tags":["architecture", "urban", "stairs", "night"]}, 
+  {"src":"/photographs/STAIRS-C-01.jpg","alt":"STAIRS-C-01","tags":["architecture", "urban", "stairs", "night"]}, 
+  {"src":"/photographs/STAIRS-D-01.jpg","alt":"STAIRS-D-01","tags":["architecture", "urban", "stairs", "night"]}, 
+  {"src":"/photographs/STAIRS-E-01.jpg","alt":"STAIRS-E-01","tags":["architecture", "urban", "stairs", "night"]}
 ]
 
 const allTags = Array.from(new Set(images.flatMap(img => img.tags)))
