@@ -7,6 +7,7 @@ interface ImageData {
   src: string;
   alt: string;
   tags: string[];
+  date?: Date;
 }
 
 export async function GET() {
@@ -36,23 +37,39 @@ async function scanDirectory(dir: string): Promise<ImageData[]> {
     }
   }
 
+  // Sort the images
+  images.sort((a, b) => {
+    if (a.date && b.date) {
+      return b.date.getTime() - a.date.getTime(); // Descending order
+    } else if (a.date) {
+      return -1; // a comes first
+    } else if (b.date) {
+      return 1;  // b comes first
+    } else {
+      return 0;  // both undated, keep original order
+    }
+  });
+
   return images;
 }
 
-function getTagsFromPath(filePath: string): string[] {
+function getTagsFromPath(filePath: string): { tags: string[], date?: Date } {
   const relativePath = path.relative(path.join(process.cwd(), 'public', 'photographs'), filePath);
   const pathParts = relativePath.split(path.sep);
   
   const tags: string[] = [];
+  let date: Date | undefined;
+
   pathParts.forEach(part => {
     const match = part.match(/^(\d{4})\.(\d{2})\.(\d{2})\s+(.+)$/);
     if (match) {
-      const [, year, month, , location] = match;
+      const [, year, month, day, location] = match;
       tags.push(year, getMonthName(parseInt(month)), location);
+      date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     }
   });
   
-  return tags;
+  return { tags, date };
 }
 
 function getMonthName(month: number): string {
@@ -68,17 +85,19 @@ async function getImageData(filePath: string): Promise<ImageData> {
   const src = '/' + relativePath.replace(/\\/g, '/');
   const alt = path.basename(filePath, path.extname(filePath));
   
-  const tags = getTagsFromPath(filePath);
-  const metadata = await getImageMetadata(filePath);
+  const { tags: pathTags, date } = getTagsFromPath(filePath);
+  const { tags: metadataTags } = await getImageMetadata(filePath);
   
   console.log(`File: ${src}`);
-  console.log(`IPTC Tags: ${metadata.tags.join(', ')}`);
-  console.log(`Path Tags: ${tags.join(', ')}`);
+  console.log(`IPTC Tags: ${metadataTags.join(', ')}`);
+  console.log(`Path Tags: ${pathTags.join(', ')}`);
+  console.log(`Date: ${date ? date.toISOString() : 'No date'}`);
   
   return {
     src,
     alt,
-    tags: [...tags, ...metadata.tags]
+    tags: [...pathTags, ...metadataTags],
+    date
   };
 }
 
