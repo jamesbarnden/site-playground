@@ -39,11 +39,11 @@ export default function TagFilter({
 }: TagFilterProps) {
   return (
     <div className="space-y-4">
-      <div className="bg-background-light dark:bg-background-dark p-4 rounded-lg shadow">
+      <div className="bg-background-light dark:bg-background-dark rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-2">Date Filters</h3>
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1">
-            <h4 className="text-sm font-medium mb-2">Year</h4>
+        <div className="space-y-2">
+          <div>
+            <h4 className="text-sm font-medium mb-1">Year</h4>
             <div className="flex flex-wrap gap-2">
               {yearTags.map(tag => (
                 <Button
@@ -57,8 +57,8 @@ export default function TagFilter({
               ))}
             </div>
           </div>
-          <div className="flex-1">
-            <h4 className="text-sm font-medium mb-2">Month</h4>
+          <div>
+            <h4 className="text-sm font-medium mb-1">Month</h4>
             <div className="flex flex-wrap gap-2">
               {monthTags.map(tag => (
                 <Button
@@ -75,7 +75,7 @@ export default function TagFilter({
         </div>
       </div>
       
-      <div className="bg-background-light dark:bg-background-dark p-4 rounded-lg shadow">
+      <div className="bg-background-light dark:bg-background-dark rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-2">Location Filters</h3>
         <div className="flex flex-wrap gap-2">
           {locationTags.map(tag => (
@@ -91,7 +91,7 @@ export default function TagFilter({
         </div>
       </div>
       
-      <div className="bg-background-light dark:bg-background-dark p-4 rounded-lg shadow">
+      <div className="bg-background-light dark:bg-background-dark rounded-lg shadow">
         <h3 className="text-lg font-semibold mb-2">IPTC Filters</h3>
         <div className="flex flex-wrap gap-2">
           {iptcTags.map(tag => (

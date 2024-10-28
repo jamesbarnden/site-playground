@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import ExpandableImage from './components/ExpandableImage'
 import Heading from './components/Heading'
-import TagFilter from './components/TagFilter'
+import Sidebar from './components/Sidebar'
 
 interface ImageData {
   src: string
@@ -114,44 +114,50 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="min-h-screen bg-background-light dark:bg-background-dark px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <Heading className="text-center py-8">My Image Gallery</Heading>
-        <div className="mb-8">
-          <TagFilter
-            yearTags={allYearTags}
-            monthTags={allMonthTags}
-            locationTags={allLocationTags}
-            iptcTags={allIptcTags}
-            selectedYearTags={selectedYearTags}
-            selectedMonthTags={selectedMonthTags}
-            selectedLocationTags={selectedLocationTags}
-            selectedIptcTags={selectedIptcTags}
-            onYearTagToggle={handleYearTagToggle}
-            onMonthTagToggle={handleMonthTagToggle}
-            onLocationTagToggle={handleLocationTagToggle}
-            onIptcTagToggle={handleIptcTagToggle}
-            onClearFilters={clearFilters}
-            totalImages={images.length}
-            filteredImagesCount={filteredImages.length}
-          />
+    <div className="min-h-screen bg-background-light dark:bg-background-dark flex flex-col">
+      <header className="sticky top-0 z-40 bg-background-light dark:bg-background-dark border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Heading className="text-center py-4">My Image Gallery</Heading>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-          {filteredImages.map((img, index) => (
-            <ExpandableImage 
-              key={index}
-              src={img.src} 
-              alt={img.alt}
-              index={index}
-              totalImages={filteredImages.length}
-              onNavigate={(direction) => handleNavigate(index, direction)}
-              isExpanded={expandedImageIndex === index}
-              onExpand={() => handleExpand(index)}
-              onClose={handleClose}
-            />
-          ))}
-        </div>
+      </header>
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar
+          yearTags={allYearTags}
+          monthTags={allMonthTags}
+          locationTags={allLocationTags}
+          iptcTags={allIptcTags}
+          selectedYearTags={selectedYearTags}
+          selectedMonthTags={selectedMonthTags}
+          selectedLocationTags={selectedLocationTags}
+          selectedIptcTags={selectedIptcTags}
+          onYearTagToggle={handleYearTagToggle}
+          onMonthTagToggle={handleMonthTagToggle}
+          onLocationTagToggle={handleLocationTagToggle}
+          onIptcTagToggle={handleIptcTagToggle}
+          onClearFilters={clearFilters}
+          totalImages={images.length}
+          filteredImagesCount={filteredImages.length}
+        />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+              {filteredImages.map((img, index) => (
+                <ExpandableImage 
+                  key={index}
+                  src={img.src} 
+                  alt={img.alt}
+                  index={index}
+                  totalImages={filteredImages.length}
+                  onNavigate={(direction) => handleNavigate(index, direction)}
+                  isExpanded={expandedImageIndex === index}
+                  onExpand={() => handleExpand(index)}
+                  onClose={handleClose}
+                />
+              ))}
+            </div>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
   )
 }
