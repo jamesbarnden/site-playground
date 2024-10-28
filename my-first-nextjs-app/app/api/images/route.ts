@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import sharp from 'sharp';
+import * as ExifReader from 'exifreader';
 
 interface ImageData {
   src: string;
@@ -61,7 +61,7 @@ function getTagsFromPath(filePath: string): { tags: string[], date?: Date } {
   let date: Date | undefined;
 
   pathParts.forEach(part => {
-    const match = part.match(/^(\d{4})\.(\d{2})\.(\d{2})\s+(.+)$/);
+    const match = part.match(/^(\d{4})\.(\d{2})\.(\d{2})_(.+)$/);
     if (match) {
       const [, year, month, day, location] = match;
       tags.push(year, getMonthName(parseInt(month)), location);
@@ -91,42 +91,51 @@ async function getImageData(filePath: string): Promise<ImageData> {
   console.log(`File: ${src}`);
   console.log(`IPTC Tags: ${metadataTags.join(', ')}`);
   console.log(`Path Tags: ${pathTags.join(', ')}`);
-  console.log(`Date: ${date ? date.toISOString() : 'No date'}`);
+  console.log(`\n`);
+  
+  // Remove duplicates without using Set
+  const uniqueTags = [...pathTags, ...metadataTags].filter((tag, index, self) =>
+    self.indexOf(tag) === index
+  );
   
   return {
     src,
     alt,
-    tags: [...pathTags, ...metadataTags],
+    tags: uniqueTags,
     date
   };
 }
 
 async function getImageMetadata(filePath: string): Promise<{ tags: string[] }> {
-  try {
-    const metadata = await sharp(filePath).metadata();
-    if (metadata.iptc) {
-      const iptcData = metadata.iptc;
-      
-      // Look for the IPTC Keywords tag (hex: 2:25)
-      const keywordMarker = Buffer.from([0x02, 0x25]);
-      let index = iptcData.indexOf(keywordMarker);
-      
-      if (index !== -1) {
-        index += keywordMarker.length + 2; // Skip marker and length bytes
-        const length = iptcData.readUInt16BE(index - 2);
-        const keywordsBuffer = iptcData.slice(index, index + length);
-        
-        // Split keywords by null terminator and filter out empty strings
-        const keywords = keywordsBuffer.toString('utf-8').split('\0').filter(Boolean);
-        
-        // Trim whitespace and filter out any remaining empty strings
-        return { tags: keywords.map(k => k.trim()).filter(Boolean) };
-      }
-    }
-  } catch (error) {
-    console.error(`Error reading metadata for ${filePath}:`, error);
-  }
+    try {
+      const buffer = await fs.readFile(filePath);
+      const tags = await ExifReader.load(buffer);
+
+      // Extract the keywords from the IPTC tags
+      let keywords: string[] = [];
   
-  // Return an empty array if no valid keywords were found
-  return { tags: [] };
-}
+      // Check if the 'iptc' tag exists
+      if (tags['iptc'] && typeof tags['iptc'] === 'object') {
+        const iptcTags = tags['iptc'];
+  
+        // Check if the 'Keywords' tag exists
+        if (
+          'Keywords' in iptcTags &&
+          typeof iptcTags['Keywords'] === 'object' &&
+          iptcTags['Keywords'] !== null &&
+          'value' in iptcTags['Keywords']
+        ) {
+          const extractedKeywords = iptcTags['Keywords'].value;
+          keywords = Array.isArray(extractedKeywords) ? extractedKeywords : [extractedKeywords];
+        }
+      }
+
+      // Return the extracted keywords
+      return { tags: keywords };
+    } catch (error) {
+      console.error(`Error reading metadata for ${filePath}:`, error);
+    }
+  
+    // Return an empty array if no metadata is found
+    return { tags: [] };
+  }
