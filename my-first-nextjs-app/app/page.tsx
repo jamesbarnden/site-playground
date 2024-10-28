@@ -8,12 +8,19 @@ import TagFilter from './components/TagFilter'
 interface ImageData {
   src: string
   alt: string
-  tags: string[]
+  yearTag: string
+  monthTag: string
+  locationTags: string[]
+  iptcTags: string[]
+  date?: Date
 }
 
 export default function Home() {
   const [images, setImages] = useState<ImageData[]>([])
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedYearTags, setSelectedYearTags] = useState<string[]>([])
+  const [selectedMonthTags, setSelectedMonthTags] = useState<string[]>([])
+  const [selectedLocationTags, setSelectedLocationTags] = useState<string[]>([])
+  const [selectedIptcTags, setSelectedIptcTags] = useState<string[]>([])
   const [expandedImageIndex, setExpandedImageIndex] = useState<number | null>(null)
 
   useEffect(() => {
@@ -23,20 +30,61 @@ export default function Home() {
       .catch(error => console.error('Error fetching images:', error))
   }, [])
 
-  const allTags = useMemo(() => 
-    Array.from(new Set(images.flatMap(img => img.tags))),
+  const allYearTags = useMemo(() => 
+    Array.from(new Set(images.map(img => img.yearTag))),
+    [images]
+  )
+
+  const allMonthTags = useMemo(() => 
+    Array.from(new Set(images.map(img => img.monthTag))),
+    [images]
+  )
+
+  const allLocationTags = useMemo(() => 
+    Array.from(new Set(images.flatMap(img => img.locationTags))),
+    [images]
+  )
+
+  const allIptcTags = useMemo(() => 
+    Array.from(new Set(images.flatMap(img => img.iptcTags))),
     [images]
   )
 
   const filteredImages = useMemo(() => {
-    if (selectedTags.length === 0) return images
     return images.filter(img => 
-      selectedTags.every(tag => img.tags.includes(tag))
+      (selectedYearTags.length === 0 || selectedYearTags.includes(img.yearTag)) &&
+      (selectedMonthTags.length === 0 || selectedMonthTags.includes(img.monthTag)) &&
+      (selectedLocationTags.length === 0 || selectedLocationTags.every(tag => img.locationTags.includes(tag))) &&
+      (selectedIptcTags.length === 0 || selectedIptcTags.every(tag => img.iptcTags.includes(tag)))
     )
-  }, [selectedTags, images])
+  }, [selectedYearTags, selectedMonthTags, selectedLocationTags, selectedIptcTags, images])
 
-  const handleTagToggle = useCallback((tag: string) => {
-    setSelectedTags(prev => 
+  const handleYearTagToggle = useCallback((tag: string) => {
+    setSelectedYearTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    )
+  }, [])
+
+  const handleMonthTagToggle = useCallback((tag: string) => {
+    setSelectedMonthTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    )
+  }, [])
+
+  const handleLocationTagToggle = useCallback((tag: string) => {
+    setSelectedLocationTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    )
+  }, [])
+
+  const handleIptcTagToggle = useCallback((tag: string) => {
+    setSelectedIptcTags(prev => 
       prev.includes(tag) 
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
@@ -44,7 +92,10 @@ export default function Home() {
   }, [])
 
   const clearFilters = useCallback(() => {
-    setSelectedTags([])
+    setSelectedYearTags([])
+    setSelectedMonthTags([])
+    setSelectedLocationTags([])
+    setSelectedIptcTags([])
   }, [])
 
   const handleNavigate = useCallback((currentIndex: number, direction: 'prev' | 'next') => {
@@ -68,9 +119,18 @@ export default function Home() {
         <Heading className="text-center py-8">My Image Gallery</Heading>
         <div className="mb-8">
           <TagFilter
-            tags={allTags}
-            selectedTags={selectedTags}
-            onTagToggle={handleTagToggle}
+            yearTags={allYearTags}
+            monthTags={allMonthTags}
+            locationTags={allLocationTags}
+            iptcTags={allIptcTags}
+            selectedYearTags={selectedYearTags}
+            selectedMonthTags={selectedMonthTags}
+            selectedLocationTags={selectedLocationTags}
+            selectedIptcTags={selectedIptcTags}
+            onYearTagToggle={handleYearTagToggle}
+            onMonthTagToggle={handleMonthTagToggle}
+            onLocationTagToggle={handleLocationTagToggle}
+            onIptcTagToggle={handleIptcTagToggle}
             onClearFilters={clearFilters}
             totalImages={images.length}
             filteredImagesCount={filteredImages.length}

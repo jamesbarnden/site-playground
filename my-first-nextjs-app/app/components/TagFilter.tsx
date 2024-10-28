@@ -1,69 +1,126 @@
-'use client'
-
-import { useState } from 'react'
-import { ChevronDown, ChevronUp, X } from 'lucide-react'
+import React from 'react';
+import { Button } from "@/app/components/ui/button"
+import { X } from "lucide-react"
 
 interface TagFilterProps {
-  tags: string[]
-  selectedTags: string[]
-  onTagToggle: (tag: string) => void
-  onClearFilters: () => void
-  totalImages: number
-  filteredImagesCount: number
+  yearTags: string[];
+  monthTags: string[];
+  locationTags: string[];
+  iptcTags: string[];
+  selectedYearTags: string[];
+  selectedMonthTags: string[];
+  selectedLocationTags: string[];
+  selectedIptcTags: string[];
+  onYearTagToggle: (tag: string) => void;
+  onMonthTagToggle: (tag: string) => void;
+  onLocationTagToggle: (tag: string) => void;
+  onIptcTagToggle: (tag: string) => void;
+  onClearFilters: () => void;
+  totalImages: number;
+  filteredImagesCount: number;
 }
 
 export default function TagFilter({
-  tags,
-  selectedTags,
-  onTagToggle,
+  yearTags,
+  monthTags,
+  locationTags,
+  iptcTags,
+  selectedYearTags,
+  selectedMonthTags,
+  selectedLocationTags,
+  selectedIptcTags,
+  onYearTagToggle,
+  onMonthTagToggle,
+  onLocationTagToggle,
+  onIptcTagToggle,
   onClearFilters,
   totalImages,
   filteredImagesCount
 }: TagFilterProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-
   return (
-    <div className="mb-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Filters</h2>
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-        >
-          {isCollapsed ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
-        </button>
-      </div>
-      {!isCollapsed && (
-        <>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => onTagToggle(tag)}
-                className={`px-3 py-1 rounded-full text-sm border ${
-                  selectedTags.includes(tag)
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-transparent text-gray-800 dark:text-gray-200 border-outline-light dark:border-outline-dark'
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
+    <div className="space-y-4">
+      <div className="bg-background-light dark:bg-background-dark p-4 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-2">Date Filters</h3>
+        <div className="flex flex-wrap gap-4">
+          <div className="flex-1">
+            <h4 className="text-sm font-medium mb-2">Year</h4>
+            <div className="flex flex-wrap gap-2">
+              {yearTags.map(tag => (
+                <Button
+                  key={tag}
+                  variant={selectedYearTags.includes(tag) ? "secondary" : "outline"}
+                  size="sm"
+                  onClick={() => onYearTagToggle(tag)}
+                >
+                  {tag}
+                </Button>
+              ))}
+            </div>
           </div>
-          {selectedTags.length > 0 && (
-            <button
-              onClick={onClearFilters}
-              className="text-sm text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 flex items-center"
+          <div className="flex-1">
+            <h4 className="text-sm font-medium mb-2">Month</h4>
+            <div className="flex flex-wrap gap-2">
+              {monthTags.map(tag => (
+                <Button
+                  key={tag}
+                  variant={selectedMonthTags.includes(tag) ? "secondary" : "outline"}
+                  size="sm"
+                  onClick={() => onMonthTagToggle(tag)}
+                >
+                  {tag}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="bg-background-light dark:bg-background-dark p-4 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-2">Location Filters</h3>
+        <div className="flex flex-wrap gap-2">
+          {locationTags.map(tag => (
+            <Button
+              key={tag}
+              variant={selectedLocationTags.includes(tag) ? "secondary" : "outline"}
+              size="sm"
+              onClick={() => onLocationTagToggle(tag)}
             >
-              <X size={16} className="mr-1" />
-              Clear filters
-            </button>
-          )}
-        </>
-      )}
-      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-        Showing {filteredImagesCount} of {totalImages} images
-      </p>
+              {tag}
+            </Button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="bg-background-light dark:bg-background-dark p-4 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-2">IPTC Filters</h3>
+        <div className="flex flex-wrap gap-2">
+          {iptcTags.map(tag => (
+            <Button
+              key={tag}
+              variant={selectedIptcTags.includes(tag) ? "secondary" : "outline"}
+              size="sm"
+              onClick={() => onIptcTagToggle(tag)}
+            >
+              {tag}
+            </Button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="flex justify-between items-center">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onClearFilters}
+          className="flex items-center"
+        >
+          <X className="w-4 h-4 mr-2" />
+          Clear Filters
+        </Button>
+        <span className="text-sm text-muted-foreground">
+          Showing {filteredImagesCount} of {totalImages} images
+        </span>
+      </div>
     </div>
-  )
+  );
 }

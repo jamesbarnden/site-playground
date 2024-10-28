@@ -6,7 +6,10 @@ import * as ExifReader from 'exifreader';
 interface ImageData {
   src: string;
   alt: string;
-  tags: string[];
+  yearTag: string;
+  monthTag: string;
+  locationTags: string[];
+  iptcTags: string[];
   date?: Date;
 }
 
@@ -38,6 +41,7 @@ async function scanDirectory(dir: string): Promise<ImageData[]> {
   }
 
   // Sort the images
+  
   images.sort((a, b) => {
     if (a.date && b.date) {
       return b.date.getTime() - a.date.getTime(); // Descending order
@@ -53,23 +57,27 @@ async function scanDirectory(dir: string): Promise<ImageData[]> {
   return images;
 }
 
-function getTagsFromPath(filePath: string): { tags: string[], date?: Date } {
+function getTagsFromPath(filePath: string): { yearTag: string, monthTag: string, locationTags: string[], date?: Date } {
   const relativePath = path.relative(path.join(process.cwd(), 'public', 'photographs'), filePath);
   const pathParts = relativePath.split(path.sep);
   
-  const tags: string[] = [];
+  let yearTag = '';
+  let monthTag = '';
+  const locationTags: string[] = [];
   let date: Date | undefined;
 
   pathParts.forEach(part => {
     const match = part.match(/^(\d{4})\.(\d{2})\.(\d{2})_(.+)$/);
     if (match) {
       const [, year, month, day, location] = match;
-      tags.push(year, getMonthName(parseInt(month)), location);
+      yearTag = year;
+      monthTag = getMonthName(parseInt(month));
+      locationTags.push(location);
       date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     }
   });
   
-  return { tags, date };
+  return { yearTag, monthTag, locationTags, date };
 }
 
 function getMonthName(month: number): string {
@@ -85,23 +93,23 @@ async function getImageData(filePath: string): Promise<ImageData> {
   const src = '/' + relativePath.replace(/\\/g, '/');
   const alt = path.basename(filePath, path.extname(filePath));
   
-  const { tags: pathTags, date } = getTagsFromPath(filePath);
-  const { tags: metadataTags } = await getImageMetadata(filePath);
+  const { yearTag, monthTag, locationTags, date } = getTagsFromPath(filePath);
+  const { tags: iptcTags } = await getImageMetadata(filePath);
   
   console.log(`File: ${src}`);
-  console.log(`IPTC Tags: ${metadataTags.join(', ')}`);
-  console.log(`Path Tags: ${pathTags.join(', ')}`);
+  console.log(`Year Tag: ${yearTag}`);
+  console.log(`Month Tag: ${monthTag}`);
+  console.log(`Location Tags: ${locationTags.join(', ')}`);
+  console.log(`IPTC Tags: ${iptcTags.join(', ')}`);
   console.log(`\n`);
-  
-  // Remove duplicates without using Set
-  const uniqueTags = [...pathTags, ...metadataTags].filter((tag, index, self) =>
-    self.indexOf(tag) === index
-  );
   
   return {
     src,
     alt,
-    tags: uniqueTags,
+    yearTag,
+    monthTag,
+    locationTags,
+    iptcTags,
     date
   };
 }
@@ -139,3 +147,4 @@ async function getImageMetadata(filePath: string): Promise<{ tags: string[] }> {
     // Return an empty array if no metadata is found
     return { tags: [] };
   }
+  
