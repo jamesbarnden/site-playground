@@ -120,7 +120,7 @@ export default function Home() {
           <Heading className="text-center py-4">My Image Gallery</Heading>
         </div>
       </header>
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1">
         <Sidebar
           yearTags={allYearTags}
           monthTags={allMonthTags}
